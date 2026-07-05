@@ -37,10 +37,10 @@ export default function About() {
       image: "https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=300&auto=format&fit=crop"
     },
     {
-      name: "Engr. Kenneth Banjo",
-      role: "Master Wood Joiner & Production Lead",
-      desc: "An artisan who spent years mastering traditional Japanese and European joints, now leading our timber atelier.",
-      image: "https://images.unsplash.com/photo-1519085360753-af0119f7cbe7?q=80&w=300&auto=format&fit=crop"
+      name: "John Dangana",
+      role: "Chief Finance & Accountant",
+      desc: "Leading financial strategy, budgeting, compliance, and reporting to drive sustainable business growth.",
+      image: "/src/assets/images/john_dangana_original.png"
     },
     {
       name: "Amina Babalola, PMP",
@@ -206,7 +206,7 @@ export default function About() {
                   <img
                     src={member.image}
                     alt={member.name}
-                    className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                    className={`w-full h-full ${member.name === "John Dangana" ? "object-contain" : "object-cover"} transition-transform duration-700 ease-out group-hover:scale-105`}
                     referrerPolicy="no-referrer"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-80 transition-opacity duration-500" />
