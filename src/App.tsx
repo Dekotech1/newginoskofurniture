@@ -9,6 +9,7 @@ import Hero from "./components/Hero";
 import About from "./components/About";
 import Services from "./components/Services";
 import Portfolio from "./components/Portfolio";
+import VideoShowcase from "./components/VideoShowcase";
 import Process from "./components/Process";
 import Stats from "./components/Stats";
 import Testimonials from "./components/Testimonials";
@@ -25,7 +26,7 @@ export default function App() {
 
   useEffect(() => {
     const handleScroll = () => {
-      const sections = ["hero", "about", "services", "portfolio", "process", "testimonials", "blog", "careers", "contact"];
+      const sections = ["hero", "about", "services", "portfolio", "videoshowcase", "process", "testimonials", "blog", "careers", "contact"];
       const scrollPos = window.scrollY + 120;
 
       for (const section of sections) {
@@ -81,6 +82,9 @@ export default function App() {
 
       {/* Blueprints / Portfolio gallery */}
       <Portfolio />
+
+      {/* Cinematic Workshop Documentary / Video Showcase */}
+      <VideoShowcase />
 
       {/* Execution protocol timeline */}
       <Process />
