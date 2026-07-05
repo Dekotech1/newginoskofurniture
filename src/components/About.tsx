@@ -40,7 +40,7 @@ export default function About() {
       name: "John Dangana",
       role: "Chief Finance & Accountant",
       desc: "Leading financial strategy, budgeting, compliance, and reporting to drive sustainable business growth.",
-      image: "/src/assets/images/john_dangana_original.png"
+      image: "/src/assets/images/john_dangana_original_photo_1783270650113.jpg"
     },
     {
       name: "Amina Babalola, PMP",
