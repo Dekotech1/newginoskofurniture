@@ -43,10 +43,10 @@ export default function About() {
       image: "/src/assets/images/john_dangana_original_photo_1783270650113.jpg"
     },
     {
-      name: "Amina Babalola, PMP",
-      role: "Head of Project Operations & Site Engineering",
+      name: "Simon Aseya Atuwa",
+      role: "Head Of Project Operation & Site Engineering",
       desc: "A rigorous project manager ensuring flawless safety, schedule compliance, and absolute finishing standards.",
-      image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=300&auto=format&fit=crop"
+      image: "/src/assets/images/simon_atuwa_screenshot_1783276612257.jpg"
     }
   ];
 
@@ -206,7 +206,7 @@ export default function About() {
                   <img
                     src={member.image}
                     alt={member.name}
-                    className={`w-full h-full ${member.name === "John Dangana" ? "object-contain" : "object-cover"} transition-transform duration-700 ease-out group-hover:scale-105`}
+                    className={`w-full h-full ${member.name === "John Dangana" || member.name === "Simon Aseya Atuwa" ? "object-contain" : "object-cover"} transition-transform duration-700 ease-out group-hover:scale-105`}
                     referrerPolicy="no-referrer"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-80 transition-opacity duration-500" />
