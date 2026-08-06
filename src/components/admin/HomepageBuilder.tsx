@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useCMS } from "../../context/CMSContext";
 import { Layout, Save, CheckCircle, Image as ImageIcon, Plus, Trash2, Edit2, Users, HelpCircle, PhoneCall, Building } from "lucide-react";
+import ImageUploader from "./ImageUploader";
 
 export default function HomepageBuilder() {
   const { cmsData, updateSection } = useCMS();
@@ -190,20 +191,12 @@ export default function HomepageBuilder() {
             </div>
 
             <div className="md:col-span-2">
-              <label className="block text-xs font-semibold text-stone-400 mb-1">Background Hero Image URL</label>
-              <div className="flex gap-2">
-                <input
-                  type="text"
-                  value={heroState.backgroundImage}
-                  onChange={(e) => setHeroState({ ...heroState, backgroundImage: e.target.value })}
-                  className="flex-1 px-3.5 py-2 rounded-xl bg-stone-950 border border-stone-800 text-white focus:outline-none focus:border-ginosko-gold text-xs"
-                />
-              </div>
-              {heroState.backgroundImage && (
-                <div className="mt-3 relative h-36 w-full rounded-xl overflow-hidden border border-stone-800">
-                  <img src={heroState.backgroundImage} alt="Hero Preview" className="w-full h-full object-cover" />
-                </div>
-              )}
+              <ImageUploader
+                label="Background Hero Image"
+                value={heroState.backgroundImage}
+                onChange={(url) => setHeroState({ ...heroState, backgroundImage: url })}
+                folder="Hero Banners"
+              />
             </div>
           </div>
         </div>
@@ -360,16 +353,16 @@ export default function HomepageBuilder() {
                     </div>
 
                     <div>
-                      <label className="text-stone-400">Profile Image Path / URL</label>
-                      <input
-                        type="text"
+                      <ImageUploader
+                        label="Profile Picture"
                         value={member.image}
-                        onChange={(e) => {
+                        onChange={(url) => {
                           const updated = [...aboutState.teamMembers];
-                          updated[index].image = e.target.value;
+                          updated[index].image = url;
                           setAboutState({ ...aboutState, teamMembers: updated });
                         }}
-                        className="w-full px-3 py-1.5 rounded-lg bg-stone-900 border border-stone-800 text-ginosko-gold font-mono text-[11px] mt-1"
+                        folder="Team Members"
+                        aspectRatio="square"
                       />
                     </div>
                   </div>

@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useCMS } from "../../context/CMSContext";
 import { Project } from "../../types";
 import { FolderKanban, Plus, Edit3, Trash2, Save, CheckCircle, Search, MapPin, Calendar, Building, DollarSign } from "lucide-react";
+import ImageUploader from "./ImageUploader";
 
 export default function PortfolioManager() {
   const { cmsData, updateSection } = useCMS();
@@ -244,12 +245,11 @@ export default function PortfolioManager() {
               </div>
 
               <div className="md:col-span-2">
-                <label className="block text-xs font-semibold text-stone-400 mb-1">Featured Image Path / URL</label>
-                <input
-                  type="text"
+                <ImageUploader
+                  label="Featured Project Picture"
                   value={editingProject.image}
-                  onChange={(e) => setEditingProject({ ...editingProject, image: e.target.value })}
-                  className="w-full px-3.5 py-2 rounded-xl bg-stone-950 border border-stone-800 text-ginosko-gold font-mono text-xs focus:outline-none focus:border-ginosko-gold"
+                  onChange={(url) => setEditingProject({ ...editingProject, image: url })}
+                  folder="Portfolio Projects"
                 />
               </div>
 

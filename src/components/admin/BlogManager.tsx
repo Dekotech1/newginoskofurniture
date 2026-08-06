@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useCMS } from "../../context/CMSContext";
 import { BlogItem } from "../../types";
 import { TrendingUp, Plus, Edit3, Trash2, Save, CheckCircle, Search, Calendar, User, Clock, Image as ImageIcon } from "lucide-react";
+import ImageUploader from "./ImageUploader";
 
 export default function BlogManager() {
   const { cmsData, updateSection } = useCMS();
@@ -227,12 +228,11 @@ export default function BlogManager() {
               </div>
 
               <div className="md:col-span-2">
-                <label className="block text-xs font-semibold text-stone-400 mb-1">Featured Cover Image URL</label>
-                <input
-                  type="text"
+                <ImageUploader
+                  label="Featured Blog Article Cover Image"
                   value={editingPost.image}
-                  onChange={(e) => setEditingPost({ ...editingPost, image: e.target.value })}
-                  className="w-full px-3.5 py-2 rounded-xl bg-stone-950 border border-stone-800 text-ginosko-gold text-xs font-mono focus:outline-none focus:border-ginosko-gold"
+                  onChange={(url) => setEditingPost({ ...editingPost, image: url })}
+                  folder="Blog Covers"
                 />
               </div>
 

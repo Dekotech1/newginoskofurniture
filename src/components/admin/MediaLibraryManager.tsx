@@ -91,7 +91,22 @@ export default function MediaLibraryManager() {
         </label>
       </div>
 
-      {/* URL Upload Box */}
+      {/* Drag & Drop Upload Dropzone */}
+      <div className="p-6 rounded-2xl bg-stone-900 border-2 border-dashed border-stone-800 hover:border-ginosko-gold/60 transition-all text-center space-y-3">
+        <div className="w-12 h-12 rounded-full bg-stone-800 text-ginosko-gold flex items-center justify-center mx-auto shadow-inner">
+          <Upload className="w-6 h-6" />
+        </div>
+        <div>
+          <h3 className="text-sm font-bold text-white">Upload Pictures Directly from Device</h3>
+          <p className="text-xs text-stone-400 mt-1">Select photos from your device, computer, or camera to store in the CMS Media Library</p>
+        </div>
+        <label className="inline-flex px-5 py-2.5 rounded-xl bg-ginosko-gold text-ginosko-dark font-bold text-xs cursor-pointer hover:bg-yellow-400 transition-all shadow-lg">
+          {isUploading ? "Uploading Picture..." : "Choose Image File"}
+          <input type="file" accept="image/*,video/*" onChange={handleFileUpload} className="hidden" />
+        </label>
+      </div>
+
+      {/* URL Upload Box (Optional) */}
       <form onSubmit={handleUrlSubmit} className="p-4 rounded-2xl bg-stone-900 border border-stone-800 space-y-3">
         <h3 className="text-xs font-semibold text-stone-300 uppercase tracking-wider flex items-center gap-2">
           <FolderPlus className="w-4 h-4 text-ginosko-gold" /> Quick Import via Image URL

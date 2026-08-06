@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useCMS } from "../../context/CMSContext";
 import { Settings, Save, CheckCircle, Globe, Shield, ToggleLeft, ToggleRight } from "lucide-react";
+import ImageUploader from "./ImageUploader";
 
 export default function WebsiteSettingsManager() {
   const { cmsData, updateSection } = useCMS();
@@ -72,6 +73,16 @@ export default function WebsiteSettingsManager() {
                 className="flex-1 px-3.5 py-2 rounded-xl bg-stone-950 border border-stone-800 text-ginosko-gold font-mono text-xs focus:outline-none focus:border-ginosko-gold"
               />
             </div>
+          </div>
+
+          <div className="md:col-span-2">
+            <ImageUploader
+              label="Brand Logo Picture"
+              value={settingsState.logoUrl || ""}
+              onChange={(url) => setSettingsState({ ...settingsState, logoUrl: url })}
+              folder="Branding"
+              aspectRatio="square"
+            />
           </div>
 
           <div className="md:col-span-2">

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useCMS, CMSUser } from "../../context/CMSContext";
 import { Users, Plus, Trash2, Edit3, Shield, CheckCircle, Lock, Mail } from "lucide-react";
+import ImageUploader from "./ImageUploader";
 
 export default function UserManager() {
   const { cmsData, user: currentUser, saveUserAccount, deleteUserAccount } = useCMS();
@@ -167,6 +168,16 @@ export default function UserManager() {
                   <option value="Author">Author (Create Posts Only)</option>
                   <option value="Viewer">Viewer (Read Only)</option>
                 </select>
+              </div>
+
+              <div>
+                <ImageUploader
+                  label="Profile Avatar Picture"
+                  value={editingUser.avatar || ""}
+                  onChange={(url) => setEditingUser({ ...editingUser, avatar: url })}
+                  folder="Avatars"
+                  aspectRatio="square"
+                />
               </div>
 
               <div>
