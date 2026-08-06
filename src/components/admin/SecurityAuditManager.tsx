@@ -53,7 +53,7 @@ export default function SecurityAuditManager() {
         </h3>
 
         <div className="space-y-3 max-h-[500px] overflow-y-auto pr-1">
-          {cmsData.auditLogs.map((log) => (
+          {(cmsData?.auditLogs || []).map((log) => (
             <div key={log.id} className="p-4 rounded-xl bg-stone-950 border border-stone-800 space-y-2 text-xs">
               <div className="flex items-center justify-between">
                 <span className="font-bold text-ginosko-gold text-sm">{log.action}</span>

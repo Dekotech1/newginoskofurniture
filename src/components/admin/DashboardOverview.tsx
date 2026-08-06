@@ -26,16 +26,14 @@ interface Props {
 export default function DashboardOverview({ onNavigateTab }: Props) {
   const { cmsData } = useCMS();
 
-  if (!cmsData) return <div className="p-8 text-ginosko-gold text-center">Loading CMS Analytics...</div>;
-
-  const totalPages = cmsData.pages.length;
-  const totalPosts = cmsData.blog.length;
-  const totalProjects = cmsData.projects.length;
-  const totalServices = cmsData.services.length;
-  const totalMedia = cmsData.media.length;
-  const totalSubmissions = cmsData.submissions.length;
-  const unreadSubmissions = cmsData.submissions.filter((s) => s.status === "unread").length;
-  const totalUsers = cmsData.users.length;
+  const totalPages = cmsData?.pages?.length || 0;
+  const totalPosts = cmsData?.blog?.length || 0;
+  const totalProjects = cmsData?.projects?.length || 0;
+  const totalServices = cmsData?.services?.length || 0;
+  const totalMedia = cmsData?.media?.length || 0;
+  const totalSubmissions = cmsData?.submissions?.length || 0;
+  const unreadSubmissions = (cmsData?.submissions || []).filter((s) => s.status === "unread").length;
+  const totalUsers = cmsData?.users?.length || 0;
 
   const statsList = [
     { label: "Total Pages", count: totalPages, icon: FileText, color: "from-blue-500/20 to-indigo-500/10", border: "border-blue-500/30", tab: "pages" },
@@ -231,7 +229,7 @@ export default function DashboardOverview({ onNavigateTab }: Props) {
           </div>
 
           <div className="space-y-3 overflow-y-auto max-h-[360px] pr-1">
-            {cmsData.auditLogs.slice(0, 7).map((log) => (
+            {(cmsData?.auditLogs || []).slice(0, 7).map((log) => (
               <div key={log.id} className="p-3 rounded-xl bg-stone-800/50 border border-stone-800 text-xs space-y-1">
                 <div className="flex items-center justify-between text-stone-300 font-semibold">
                   <span>{log.action}</span>

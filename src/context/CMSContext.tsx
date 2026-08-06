@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { Project, ServiceItem, ProcessStep, Testimonial, BlogItem, JobOpening, GalleryItem, StatsItem } from "../types";
+import { defaultCMSData } from "../data/defaultCMSData";
 
 export interface CMSUser {
   id: string;
@@ -195,8 +196,8 @@ interface CMSContextType {
 const CMSContext = createContext<CMSContextType | undefined>(undefined);
 
 export const CMSProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [cmsData, setCmsData] = useState<CMSData | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [cmsData, setCmsData] = useState<CMSData>(defaultCMSData);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [user, setUser] = useState<CMSUser | null>(null);
   const [token, setToken] = useState<string | null>(null);
   const [isAdminOpen, setIsAdminOpen] = useState<boolean>(false);
@@ -228,30 +229,43 @@ export const CMSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
 
   // Fetch full CMS data on load
   const refreshCMS = async () => {
+    setIsLoading(true);
+    let loadedData: CMSData | null = null;
+
+    // 1. Try API first
     try {
-      setIsLoading(true);
       const res = await fetch("/api/cms/data");
       if (res.ok) {
-        const data = await parseJSON(res);
-        setCmsData(data);
-        localStorage.setItem("ginosko_local_cms_data", JSON.stringify(data));
-        return;
+        loadedData = await parseJSON(res);
       }
     } catch (err) {
       console.warn("API unavailable, falling back to local stored CMS data:", err);
-    } finally {
-      setIsLoading(false);
     }
 
-    // Fallback: load from localStorage
-    const savedLocalData = localStorage.getItem("ginosko_local_cms_data");
-    if (savedLocalData) {
-      try {
-        setCmsData(JSON.parse(savedLocalData));
-      } catch (e) {
-        console.error("Failed to parse local CMS data");
+    // 2. Try localStorage if API failed
+    if (!loadedData) {
+      const savedLocalData = localStorage.getItem("ginosko_local_cms_data");
+      if (savedLocalData) {
+        try {
+          loadedData = JSON.parse(savedLocalData);
+        } catch (e) {
+          console.error("Failed to parse local stored CMS data");
+        }
       }
     }
+
+    // 3. Fallback to default initial CMS data
+    if (!loadedData) {
+      loadedData = defaultCMSData;
+    }
+
+    setCmsData(loadedData);
+    try {
+      localStorage.setItem("ginosko_local_cms_data", JSON.stringify(loadedData));
+    } catch (e) {
+      console.warn("Could not save to localStorage:", e);
+    }
+    setIsLoading(false);
   };
 
   useEffect(() => {
