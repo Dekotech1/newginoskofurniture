@@ -306,12 +306,17 @@ export default function AdminPanel() {
             G
           </div>
           <div>
-            <h1 className="text-base font-display font-bold text-white tracking-wide leading-none">
+            <h1 className="text-base font-display font-bold text-white tracking-wide leading-none flex items-center gap-2">
               Ginosko Enterprise CMS
             </h1>
             <span className="text-[10px] text-stone-400 font-mono">
               Live Connected Database • {user.role} Mode
             </span>
+          </div>
+          <div className="hidden lg:flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-semibold ml-4">
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping shrink-0" />
+            <span className="w-2 h-2 rounded-full bg-emerald-400 shrink-0 -ml-4" />
+            <span>⚡ Automatic Live Publishing Active</span>
           </div>
         </div>
 
@@ -465,7 +470,31 @@ export default function AdminPanel() {
 
         {/* Main Work Area */}
         <main className="flex-1 bg-stone-950/40 p-6 md:p-8 overflow-y-auto">
-          <div className="max-w-7xl mx-auto">
+          <div className="max-w-7xl mx-auto space-y-6">
+            {/* Auto-Publish Info Banner */}
+            <div className="p-3.5 rounded-2xl bg-stone-900/90 border border-emerald-500/30 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs shadow-xl">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400 shrink-0">
+                  <Sparkles className="w-4 h-4" />
+                </div>
+                <div>
+                  <div className="font-bold text-white flex items-center gap-2">
+                    Live Auto-Publish Engine Active
+                    <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-[10px] font-mono font-semibold uppercase">
+                      Instant Sync
+                    </span>
+                  </div>
+                  <p className="text-stone-400 text-[11px] mt-0.5">
+                    Any modification made in this CMS is saved and published automatically to the live website in real-time.
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2 font-mono text-[10px] text-emerald-400 bg-emerald-950/50 border border-emerald-800/60 px-3 py-1.5 rounded-xl shrink-0">
+                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                <span>Connected to Cloud DB</span>
+              </div>
+            </div>
             {activeTab === "dashboard" && <DashboardOverview onNavigateTab={(tab) => setActiveTab(tab)} />}
             {activeTab === "pages" && <PageManager />}
             {activeTab === "homepage" && <HomepageBuilder />}
