@@ -8,6 +8,7 @@ import { motion, AnimatePresence } from "motion/react";
 import { Briefcase, MapPin, Clock, X, Upload, CheckCircle2, ChevronRight, FileText } from "lucide-react";
 import { JobOpening } from "../types";
 import { careersData } from "../data";
+import { useCMS } from "../context/CMSContext";
 
 export default function Careers() {
   const [activeJob, setActiveJob] = useState<JobOpening | null>(null);
@@ -15,6 +16,9 @@ export default function Careers() {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [file, setFile] = useState<File | null>(null);
   const [dragOver, setDragOver] = useState(false);
+  const { cmsData } = useCMS();
+
+  const careersList = (cmsData?.careers && cmsData.careers.length > 0) ? cmsData.careers : careersData;
   
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -68,7 +72,7 @@ export default function Careers() {
 
         {/* Career openings listing columns */}
         <div id="careers-list" className="max-w-4xl mx-auto space-y-6 text-left">
-          {careersData.map((job, idx) => (
+          {careersList.map((job, idx) => (
             <motion.div
               id={`job-row-${job.id}`}
               key={job.id}

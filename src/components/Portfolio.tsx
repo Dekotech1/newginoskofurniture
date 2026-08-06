@@ -8,10 +8,14 @@ import { motion, AnimatePresence } from "motion/react";
 import { X, MapPin, Calendar, Ruler, Compass, Plus, ArrowRight } from "lucide-react";
 import { Project } from "../types";
 import { projectsData } from "../data";
+import { useCMS } from "../context/CMSContext";
 
 export default function Portfolio() {
   const [selectedCategory, setSelectedCategory] = useState<"All" | "Furniture" | "Residential" | "Commercial" | "Interior Design">("All");
   const [activeProject, setActiveProject] = useState<Project | null>(null);
+  const { cmsData } = useCMS();
+
+  const projectsList = (cmsData?.projects && cmsData.projects.length > 0) ? cmsData.projects : projectsData;
 
   const filterCategories = [
     { id: "All", label: "All Works" },
@@ -21,7 +25,7 @@ export default function Portfolio() {
     { id: "Interior Design", label: "Luxury Interiors" }
   ];
 
-  const filteredProjects = projectsData.filter(
+  const filteredProjects = projectsList.filter(
     (proj) => selectedCategory === "All" || proj.category === selectedCategory
   );
 

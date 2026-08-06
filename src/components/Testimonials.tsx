@@ -7,8 +7,12 @@ import React from "react";
 import { motion } from "motion/react";
 import { Star, Quote, Heart } from "lucide-react";
 import { testimonialsData } from "../data";
+import { useCMS } from "../context/CMSContext";
 
 export default function Testimonials() {
+  const { cmsData } = useCMS();
+  const list = (cmsData?.testimonials && cmsData.testimonials.length > 0) ? cmsData.testimonials : testimonialsData;
+
   return (
     <section id="testimonials" className="py-24 bg-ginosko-dark relative overflow-hidden border-t border-white/5">
       {/* Absolute faint quotes background */}
@@ -31,7 +35,7 @@ export default function Testimonials() {
 
         {/* Testimonials Grid */}
         <div id="testimonials-grid" className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {testimonialsData.map((test, idx) => (
+          {list.map((test, idx) => (
             <motion.div
               id={`testimonial-card-${test.id}`}
               key={test.id}

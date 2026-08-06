@@ -7,6 +7,7 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { ArrowRight, ArrowLeft, Ruler, Hammer, HardHat, FileText, Compass, Search, Smile } from "lucide-react";
 import { processSteps } from "../data";
+import { useCMS } from "../context/CMSContext";
 
 const iconMap: { [key: number]: React.ComponentType<any> } = {
   1: Search,
@@ -20,13 +21,16 @@ const iconMap: { [key: number]: React.ComponentType<any> } = {
 
 export default function Process() {
   const [activeStep, setActiveStep] = useState(0);
+  const { cmsData } = useCMS();
+
+  const stepsList = (cmsData?.processSteps && cmsData.processSteps.length > 0) ? cmsData.processSteps : processSteps;
 
   const handleNext = () => {
-    setActiveStep((prev) => (prev + 1) % processSteps.length);
+    setActiveStep((prev) => (prev + 1) % stepsList.length);
   };
 
   const handlePrev = () => {
-    setActiveStep((prev) => (prev - 1 + processSteps.length) % processSteps.length);
+    setActiveStep((prev) => (prev - 1 + stepsList.length) % stepsList.length);
   };
 
   return (
@@ -57,11 +61,11 @@ export default function Process() {
             <div className="absolute left-0 w-full h-[1px] bg-white/10 z-0" />
             <motion.div
               className="absolute left-0 h-[2px] bg-ginosko-gold z-0"
-              style={{ width: `${(activeStep / (processSteps.length - 1)) * 100}%` }}
+              style={{ width: `${(activeStep / (Math.max(1, stepsList.length - 1))) * 100}%` }}
               transition={{ duration: 0.5 }}
             />
 
-            {processSteps.map((step, idx) => {
+            {stepsList.map((step, idx) => {
               const Icon = iconMap[step.id] || Hammer;
               const isActive = activeStep === idx;
               const isPassed = idx < activeStep;
@@ -105,103 +109,105 @@ export default function Process() {
 
           {/* Focused Step Display Card */}
           <AnimatePresence mode="wait">
-            <motion.div
-              id={`focused-step-card-${processSteps[activeStep].id}`}
-              key={activeStep}
-              className="grid grid-cols-1 lg:grid-cols-12 gap-16 bg-[#161616] p-12 rounded-none border border-white/5 shadow-2xl relative"
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: -20 }}
-              transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-            >
-              {/* Corner Watermark Number */}
-              <div className="absolute right-12 bottom-4 font-mono text-[120px] text-white/3 font-black tracking-tighter leading-none pointer-events-none select-none">
-                {processSteps[activeStep].number}
-              </div>
-
-              {/* Detail Content left column */}
-              <div className="lg:col-span-7 space-y-6 text-left">
-                <span className="font-mono text-xs text-ginosko-gold tracking-widest uppercase font-bold">
-                  PHASE {processSteps[activeStep].number} OF {processSteps.length}
-                </span>
-                <h3 className="font-sans text-3xl text-white font-black uppercase tracking-tighter">
-                  {processSteps[activeStep].title}
-                </h3>
-                <p className="font-sans text-sm sm:text-base text-white/80 font-normal leading-relaxed">
-                  {processSteps[activeStep].description}
-                </p>
-                <div className="w-12 h-[1px] bg-white/20 my-6" />
-                <p className="font-sans text-xs sm:text-sm text-white/60 font-light leading-relaxed">
-                  {processSteps[activeStep].details}
-                </p>
-              </div>
-
-              {/* Right Column: Architectural Checklist */}
-              <div className="lg:col-span-5 bg-black/20 border border-white/10 p-8 rounded-none flex flex-col justify-between wood-grain">
-                <div>
-                  <h4 className="font-mono text-[9px] tracking-widest text-ginosko-gold uppercase font-bold mb-4">
-                    EXPECTED OUTPUTS & DOCUMENTS
-                  </h4>
-                  <ul className="space-y-4">
-                    {activeStep === 0 && (
-                      <>
-                        <li className="flex items-center gap-3 text-xs text-white/80"><span className="w-1.5 h-1.5 bg-ginosko-gold rounded-none" /> Detailed Design Brief Document</li>
-                        <li className="flex items-center gap-3 text-xs text-white/80"><span className="w-1.5 h-1.5 bg-ginosko-gold rounded-none" /> Mood boards & Aesthetic Alignment</li>
-                        <li className="flex items-center gap-3 text-xs text-white/80"><span className="w-1.5 h-1.5 bg-ginosko-gold rounded-none" /> Conceptual Budget Framework</li>
-                      </>
-                    )}
-                    {activeStep === 1 && (
-                      <>
-                        <li className="flex items-center gap-3 text-xs text-white/80"><span className="w-1.5 h-1.5 bg-ginosko-gold rounded-none" /> Photorealistic 3D Renders</li>
-                        <li className="flex items-center gap-3 text-xs text-white/80"><span className="w-1.5 h-1.5 bg-ginosko-gold rounded-none" /> Cabinetry & Wood Joinery Plans</li>
-                        <li className="flex items-center gap-3 text-xs text-white/80"><span className="w-1.5 h-1.5 bg-ginosko-gold rounded-none" /> Interior Material Sample Boards</li>
-                      </>
-                    )}
-                    {activeStep === 2 && (
-                      <>
-                        <li className="flex items-center gap-3 text-xs text-white/80"><span className="w-1.5 h-1.5 bg-ginosko-gold rounded-none" /> Absolute Bills of Quantities (BOQ)</li>
-                        <li className="flex items-center gap-3 text-xs text-white/80"><span className="w-1.5 h-1.5 bg-ginosko-gold rounded-none" /> Civil Structural Site Layouts</li>
-                        <li className="flex items-center gap-3 text-xs text-white/80"><span className="w-1.5 h-1.5 bg-ginosko-gold rounded-none" /> Kiln Timber Drying Logs (8% target)</li>
-                      </>
-                    )}
-                    {activeStep > 2 && (
-                      <>
-                        <li className="flex items-center gap-3 text-xs text-white/80"><span className="w-1.5 h-1.5 bg-ginosko-gold rounded-none" /> Precision wood machining specs</li>
-                        <li className="flex items-center gap-3 text-xs text-white/80"><span className="w-1.5 h-1.5 bg-ginosko-gold rounded-none" /> Concrete compression strength tests</li>
-                        <li className="flex items-center gap-3 text-xs text-white/80"><span className="w-1.5 h-1.5 bg-ginosko-gold rounded-none" /> Hardware stress tests & Soft close check</li>
-                      </>
-                    )}
-                  </ul>
+            {stepsList[activeStep] && (
+              <motion.div
+                id={`focused-step-card-${stepsList[activeStep].id}`}
+                key={activeStep}
+                className="grid grid-cols-1 lg:grid-cols-12 gap-16 bg-[#161616] p-12 rounded-none border border-white/5 shadow-2xl relative"
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -20 }}
+                transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+              >
+                {/* Corner Watermark Number */}
+                <div className="absolute right-12 bottom-4 font-mono text-[120px] text-white/3 font-black tracking-tighter leading-none pointer-events-none select-none">
+                  {stepsList[activeStep].number}
                 </div>
 
-                {/* Progress Control Buttons */}
-                <div className="flex gap-4 mt-8">
-                  <button
-                    id="prev-step-btn"
-                    onClick={handlePrev}
-                    className="p-3 bg-white/5 border border-white/10 hover:border-ginosko-gold rounded-none transition-colors cursor-pointer text-white"
-                  >
-                    <ArrowLeft className="w-4 h-4" />
-                  </button>
-                  <button
-                    id="next-step-btn"
-                    onClick={handleNext}
-                    className="p-3 bg-ginosko-gold hover:bg-ginosko-amber rounded-none text-black transition-colors cursor-pointer font-bold"
-                  >
-                    <ArrowRight className="w-4 h-4" />
-                  </button>
+                {/* Detail Content left column */}
+                <div className="lg:col-span-7 space-y-6 text-left">
+                  <span className="font-mono text-xs text-ginosko-gold tracking-widest uppercase font-bold">
+                    PHASE {stepsList[activeStep].number} OF {stepsList.length}
+                  </span>
+                  <h3 className="font-sans text-3xl text-white font-black uppercase tracking-tighter">
+                    {stepsList[activeStep].title}
+                  </h3>
+                  <p className="font-sans text-sm sm:text-base text-white/80 font-normal leading-relaxed">
+                    {stepsList[activeStep].description}
+                  </p>
+                  <div className="w-12 h-[1px] bg-white/20 my-6" />
+                  <p className="font-sans text-xs sm:text-sm text-white/60 font-light leading-relaxed">
+                    {stepsList[activeStep].details}
+                  </p>
                 </div>
 
-              </div>
+                {/* Right Column: Architectural Checklist */}
+                <div className="lg:col-span-5 bg-black/20 border border-white/10 p-8 rounded-none flex flex-col justify-between wood-grain">
+                  <div>
+                    <h4 className="font-mono text-[9px] tracking-widest text-ginosko-gold uppercase font-bold mb-4">
+                      EXPECTED OUTPUTS & DOCUMENTS
+                    </h4>
+                    <ul className="space-y-4">
+                      {activeStep === 0 && (
+                        <>
+                          <li className="flex items-center gap-3 text-xs text-white/80"><span className="w-1.5 h-1.5 bg-ginosko-gold rounded-none" /> Detailed Design Brief Document</li>
+                          <li className="flex items-center gap-3 text-xs text-white/80"><span className="w-1.5 h-1.5 bg-ginosko-gold rounded-none" /> Mood boards & Aesthetic Alignment</li>
+                          <li className="flex items-center gap-3 text-xs text-white/80"><span className="w-1.5 h-1.5 bg-ginosko-gold rounded-none" /> Conceptual Budget Framework</li>
+                        </>
+                      )}
+                      {activeStep === 1 && (
+                        <>
+                          <li className="flex items-center gap-3 text-xs text-white/80"><span className="w-1.5 h-1.5 bg-ginosko-gold rounded-none" /> Photorealistic 3D Renders</li>
+                          <li className="flex items-center gap-3 text-xs text-white/80"><span className="w-1.5 h-1.5 bg-ginosko-gold rounded-none" /> Cabinetry & Wood Joinery Plans</li>
+                          <li className="flex items-center gap-3 text-xs text-white/80"><span className="w-1.5 h-1.5 bg-ginosko-gold rounded-none" /> Interior Material Sample Boards</li>
+                        </>
+                      )}
+                      {activeStep === 2 && (
+                        <>
+                          <li className="flex items-center gap-3 text-xs text-white/80"><span className="w-1.5 h-1.5 bg-ginosko-gold rounded-none" /> Absolute Bills of Quantities (BOQ)</li>
+                          <li className="flex items-center gap-3 text-xs text-white/80"><span className="w-1.5 h-1.5 bg-ginosko-gold rounded-none" /> Civil Structural Site Layouts</li>
+                          <li className="flex items-center gap-3 text-xs text-white/80"><span className="w-1.5 h-1.5 bg-ginosko-gold rounded-none" /> Kiln Timber Drying Logs (8% target)</li>
+                        </>
+                      )}
+                      {activeStep > 2 && (
+                        <>
+                          <li className="flex items-center gap-3 text-xs text-white/80"><span className="w-1.5 h-1.5 bg-ginosko-gold rounded-none" /> Precision wood machining specs</li>
+                          <li className="flex items-center gap-3 text-xs text-white/80"><span className="w-1.5 h-1.5 bg-ginosko-gold rounded-none" /> Concrete compression strength tests</li>
+                          <li className="flex items-center gap-3 text-xs text-white/80"><span className="w-1.5 h-1.5 bg-ginosko-gold rounded-none" /> Hardware stress tests & Soft close check</li>
+                        </>
+                      )}
+                    </ul>
+                  </div>
 
-            </motion.div>
+                  {/* Progress Control Buttons */}
+                  <div className="flex gap-4 mt-8">
+                    <button
+                      id="prev-step-btn"
+                      onClick={handlePrev}
+                      className="p-3 bg-white/5 border border-white/10 hover:border-ginosko-gold rounded-none transition-colors cursor-pointer text-white"
+                    >
+                      <ArrowLeft className="w-4 h-4" />
+                    </button>
+                    <button
+                      id="next-step-btn"
+                      onClick={handleNext}
+                      className="p-3 bg-ginosko-gold hover:bg-ginosko-amber rounded-none text-black transition-colors cursor-pointer font-bold"
+                    >
+                      <ArrowRight className="w-4 h-4" />
+                    </button>
+                  </div>
+
+                </div>
+
+              </motion.div>
+            )}
           </AnimatePresence>
 
         </div>
 
         {/* Mobile Interface: Simple Stacking List with Detailed Accordion */}
         <div id="mobile-process" className="lg:hidden space-y-4">
-          {processSteps.map((step, idx) => {
+          {stepsList.map((step, idx) => {
             const Icon = iconMap[step.id] || Hammer;
             const isOpen = activeStep === idx;
             return (

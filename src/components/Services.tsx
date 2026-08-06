@@ -7,6 +7,7 @@ import React, { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { Sofa, LayoutGrid, Home, Building, Layers, Briefcase, CheckCircle2 } from "lucide-react";
 import { servicesData } from "../data";
+import { useCMS } from "../context/CMSContext";
 
 const iconMap: { [key: string]: React.ComponentType<any> } = {
   Sofa,
@@ -19,6 +20,9 @@ const iconMap: { [key: string]: React.ComponentType<any> } = {
 
 export default function Services() {
   const [activeCategory, setActiveCategory] = useState<"All" | "Furniture" | "Construction" | "Design">("All");
+  const { cmsData } = useCMS();
+
+  const servicesList = (cmsData?.services && cmsData.services.length > 0) ? cmsData.services : servicesData;
 
   const categories = [
     { id: "All", label: "All Disciplines" },
@@ -27,7 +31,7 @@ export default function Services() {
     { id: "Design", label: "Design & Supervision" }
   ];
 
-  const filteredServices = servicesData.filter(
+  const filteredServices = servicesList.filter(
     (srv) => activeCategory === "All" || srv.category === activeCategory
   );
 

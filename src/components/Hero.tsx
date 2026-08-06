@@ -7,6 +7,7 @@ import React from "react";
 import { motion } from "motion/react";
 import { ArrowRight, Compass, HardHat, Sofa } from "lucide-react";
 import { brandImages } from "../data";
+import { useCMS } from "../context/CMSContext";
 
 interface HeroProps {
   onExploreProjects: () => void;
@@ -14,6 +15,17 @@ interface HeroProps {
 }
 
 export default function Hero({ onExploreProjects, onRequestQuote }: HeroProps) {
+  const { cmsData } = useCMS();
+  const heroData = cmsData?.hero;
+
+  const bgImg = heroData?.backgroundImage || brandImages.hero;
+  const badgeText = heroData?.badge || "Premium Craftsmanship Since 2014";
+  const headlinePart1 = heroData?.headlinePart1 || "Crafting";
+  const headlineGold = heroData?.headlineGold || "Futures.";
+  const subheadingText = heroData?.subheading || "Ginosko Furniture & Construction is Nigeria's premier atelier delivering masterly crafted custom joinery, high-fidelity luxury interior finishing, and state-of-the-art turnkey civil engineering.";
+  const primaryBtn = heroData?.primaryButtonText || "Explore Projects";
+  const secondaryBtn = heroData?.secondaryButtonText || "Request Space Estimate";
+
   return (
     <section
       id="hero"
@@ -24,7 +36,7 @@ export default function Hero({ onExploreProjects, onRequestQuote }: HeroProps) {
         <motion.div
           id="hero-bg-zoom"
           className="w-full h-full bg-cover bg-center"
-          style={{ backgroundImage: `url(${brandImages.hero})` }}
+          style={{ backgroundImage: `url(${bgImg})` }}
           initial={{ scale: 1.15, rotate: 0.5 }}
           animate={{ scale: 1, rotate: 0 }}
           transition={{ duration: 12, ease: "easeOut" }}
@@ -55,7 +67,7 @@ export default function Hero({ onExploreProjects, onRequestQuote }: HeroProps) {
             transition={{ duration: 0.8, delay: 0.2 }}
           >
             <p className="text-ginosko-gold text-xs font-bold uppercase tracking-[0.3em] mb-4">
-              Premium Craftsmanship Since 2014
+              {badgeText}
             </p>
             <div className="flex flex-wrap gap-4 items-center">
               <span className="px-4 py-1.5 bg-white/5 backdrop-blur-md border border-white/10 text-white font-mono text-[10px] tracking-widest uppercase rounded-full flex items-center gap-2">
@@ -83,9 +95,9 @@ export default function Hero({ onExploreProjects, onRequestQuote }: HeroProps) {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 1, delay: 0.4, ease: [0.16, 1, 0.3, 1] }}
           >
-            Crafting <span className="text-outline">Timeless</span> <br />
+            {headlinePart1} <span className="text-outline">Timeless</span> <br />
             <span className="text-ginosko-cream">Spaces.</span>{" "}
-            <span className="text-outline">Building</span> <span className="text-ginosko-gold">Futures.</span>
+            <span className="text-outline">Building</span> <span className="text-ginosko-gold">{headlineGold}</span>
           </motion.h1>
 
           {/* Subheading */}
@@ -96,7 +108,7 @@ export default function Hero({ onExploreProjects, onRequestQuote }: HeroProps) {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.6 }}
           >
-            Ginosko Furniture & Construction is Nigeria's premier atelier delivering masterly crafted custom joinery, high-fidelity luxury interior finishing, and state-of-the-art turnkey civil engineering.
+            {subheadingText}
           </motion.p>
 
           {/* Interactive CTAs */}
@@ -112,7 +124,7 @@ export default function Hero({ onExploreProjects, onRequestQuote }: HeroProps) {
               onClick={onExploreProjects}
               className="group px-8 py-4 bg-ginosko-gold text-black font-sans text-[10px] tracking-widest font-bold uppercase rounded-none transition-all duration-300 flex items-center justify-center gap-3 hover:bg-ginosko-amber gold-glow cursor-pointer"
             >
-              Explore Projects
+              {primaryBtn}
               <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1.5 transition-transform duration-300" />
             </button>
             <button
@@ -120,7 +132,7 @@ export default function Hero({ onExploreProjects, onRequestQuote }: HeroProps) {
               onClick={onRequestQuote}
               className="px-8 py-4 bg-transparent border border-white/20 hover:border-white/50 text-white font-sans text-[10px] tracking-widest font-bold uppercase rounded-none transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer"
             >
-              Request Space Estimate
+              {secondaryBtn}
             </button>
           </motion.div>
         </div>

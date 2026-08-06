@@ -6,8 +6,39 @@
 import React from "react";
 import { motion } from "motion/react";
 import { Award, Eye, Shield, Target, Users } from "lucide-react";
+import { useCMS } from "../context/CMSContext";
 
 export default function About() {
+  const { cmsData } = useCMS();
+  const aboutData = cmsData?.about;
+
+  const badgeText = aboutData?.badge || "OUR HERITAGE";
+  const titleText = aboutData?.title || "Delivering Unrivaled Spatial Mastery.";
+  const descriptionText = aboutData?.description || "Ginosko Furniture & Construction was founded in Nigeria on a singular, powerful premise: that spaces should inspire and structures should endure.";
+  const teamMembers = (aboutData?.teamMembers && aboutData.teamMembers.length > 0) ? aboutData.teamMembers : [
+    {
+      id: "tm-1",
+      name: "Arch. Segun Ginosko",
+      role: "CEO & Chief Design Director",
+      desc: "A visionary architect with over 15 years designing luxury residences and corporate hubs across West Africa.",
+      image: "https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=300&auto=format&fit=crop"
+    },
+    {
+      id: "tm-2",
+      name: "John Dangana",
+      role: "Chief Finance & Accountant",
+      desc: "Leading financial strategy, budgeting, compliance, and reporting to drive sustainable business growth.",
+      image: "/src/assets/images/john_dangana_original_photo_1783270650113.jpg"
+    },
+    {
+      id: "tm-3",
+      name: "Simon Aseya Atuwa",
+      role: "Head Of Project Operation & Site Engineering",
+      desc: "A rigorous project manager ensuring flawless safety, schedule compliance, and absolute finishing standards.",
+      image: "/src/assets/images/simon_atuwa_screenshot_1783276612257.jpg"
+    }
+  ];
+
   const coreValues = [
     {
       id: "val-1",
@@ -29,27 +60,6 @@ export default function About() {
     }
   ];
 
-  const team = [
-    {
-      name: "Arch. Segun Ginosko",
-      role: "CEO & Chief Design Director",
-      desc: "A visionary architect with over 15 years designing luxury residences and corporate hubs across West Africa.",
-      image: "https://images.unsplash.com/photo-1560250097-0b93528c311a?q=80&w=300&auto=format&fit=crop"
-    },
-    {
-      name: "John Dangana",
-      role: "Chief Finance & Accountant",
-      desc: "Leading financial strategy, budgeting, compliance, and reporting to drive sustainable business growth.",
-      image: "/src/assets/images/john_dangana_original_photo_1783270650113.jpg"
-    },
-    {
-      name: "Simon Aseya Atuwa",
-      role: "Head Of Project Operation & Site Engineering",
-      desc: "A rigorous project manager ensuring flawless safety, schedule compliance, and absolute finishing standards.",
-      image: "/src/assets/images/simon_atuwa_screenshot_1783276612257.jpg"
-    }
-  ];
-
   return (
     <section id="about" className="py-24 bg-ginosko-dark relative overflow-hidden border-t border-white/5">
       {/* Background Decorative Text */}
@@ -68,7 +78,7 @@ export default function About() {
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
           >
-            OUR HERITAGE
+            {badgeText}
           </motion.span>
           <motion.h2
             id="about-title"
@@ -78,7 +88,7 @@ export default function About() {
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            Delivering <span className="text-outline">Unrivaled</span> Spatial Mastery.
+            {titleText}
           </motion.h2>
           <div className="w-16 h-[2px] bg-ginosko-gold" />
         </div>
@@ -94,13 +104,10 @@ export default function About() {
             transition={{ duration: 0.8 }}
           >
             <p className="text-lg font-normal text-white mb-4 leading-relaxed">
-              Ginosko Furniture & Construction was founded in Nigeria on a singular, powerful premise: that spaces should inspire and structures should endure.
+              {descriptionText}
             </p>
             <p>
-              By fusing a state-of-the-art wood manufacturing workshop with an elite, full-service civil engineering and structural construction division, we have achieved a level of turnkey design and finish consistency that is virtually unmatched in the West African region. We don't just build walls; we craft the bespoke furniture and acoustic claddings that make those walls live.
-            </p>
-            <p>
-              Whether it's a multi-level architectural villa in Lekki Phase 1, a smart office headquarters in Victoria Island, or a custom dining slab in Maitama, Ginosko brings an uncompromising dedication to millimeter-precision, premium timber kiln-drying, and rigid structural concrete standards.
+              By fusing a state-of-the-art wood manufacturing workshop with an elite, full-service civil engineering and structural construction division, we have achieved a level of turnkey design and finish consistency that is virtually unmatched in the West African region.
             </p>
           </motion.div>
 
@@ -192,7 +199,7 @@ export default function About() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {team.map((member, idx) => (
+            {teamMembers.map((member, idx) => (
               <motion.div
                 id={`team-member-${idx}`}
                 key={idx}

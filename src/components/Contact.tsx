@@ -6,8 +6,17 @@
 import React, { useState } from "react";
 import { motion } from "motion/react";
 import { MapPin, Phone, Mail, Clock, MessageSquare, CheckCircle2, Send } from "lucide-react";
+import { useCMS } from "../context/CMSContext";
 
 export default function Contact() {
+  const { cmsData } = useCMS();
+  const contactData = cmsData?.contact;
+
+  const address = contactData?.address || "42 Alfred Rewane Road, Ikoyi, Lagos, Nigeria.";
+  const phone = contactData?.phone || "+234 (0) 803 123 4567";
+  const email = contactData?.email || "contact@ginoskofurniture.com";
+  const workingHours = contactData?.workingHours || "Mon - Fri: 8:00 AM - 6:00 PM";
+
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
@@ -172,10 +181,8 @@ export default function Contact() {
                 </div>
                 <div>
                   <h4 className="font-sans text-sm font-bold text-white uppercase tracking-wider mb-1.5">CREATIVE ATELIER</h4>
-                  <p className="leading-relaxed">
-                    Ginosko Creative Atelier,<br />
-                    42 Alfred Rewane Road, Ikoyi,<br />
-                    Lagos, Nigeria.
+                  <p className="leading-relaxed whitespace-pre-line">
+                    {address}
                   </p>
                 </div>
               </div>
@@ -187,8 +194,7 @@ export default function Contact() {
                 <div>
                   <h4 className="font-sans text-sm font-bold text-white uppercase tracking-wider mb-1.5">TELEPHONE SERVICES</h4>
                   <p className="font-mono leading-relaxed text-gray-300">
-                    Main Atelier: <a href="tel:+2348031234567" className="hover:text-ginosko-gold transition-colors">+234 (0) 803 123 4567</a><br />
-                    Commercial: <a href="tel:+23414567890" className="hover:text-ginosko-gold transition-colors">+234 (0) 1 456 7890</a>
+                    Main Atelier: <a href={`tel:${phone}`} className="hover:text-ginosko-gold transition-colors">{phone}</a>
                   </p>
                 </div>
               </div>
@@ -200,8 +206,7 @@ export default function Contact() {
                 <div>
                   <h4 className="font-sans text-sm font-bold text-white uppercase tracking-wider mb-1.5">ELECTRONIC CORRESPONDENCE</h4>
                   <p className="leading-relaxed text-gray-300 font-medium">
-                    Intake & Tenders: <a href="mailto:contact@ginoskofurniture.com" className="hover:text-ginosko-gold transition-colors underline">contact@ginoskofurniture.com</a><br />
-                    Partnership: <a href="mailto:projects@ginoskofurniture.com" className="hover:text-ginosko-gold transition-colors underline">projects@ginoskofurniture.com</a>
+                    Intake & Tenders: <a href={`mailto:${email}`} className="hover:text-ginosko-gold transition-colors underline">{email}</a>
                   </p>
                 </div>
               </div>
@@ -212,10 +217,8 @@ export default function Contact() {
                 </div>
                 <div>
                   <h4 className="font-sans text-sm font-bold text-white uppercase tracking-wider mb-1.5">BUSINESS HOURS</h4>
-                  <p className="leading-relaxed">
-                    Monday – Friday: 8:00 AM – 6:00 PM<br />
-                    Saturday: 10:00 AM – 4:00 PM<br />
-                    Sunday: Closed (Atelier Curation by Appointment Only)
+                  <p className="leading-relaxed whitespace-pre-line">
+                    {workingHours}
                   </p>
                 </div>
               </div>

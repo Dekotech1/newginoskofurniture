@@ -8,10 +8,14 @@ import { motion, AnimatePresence } from "motion/react";
 import { ArrowRight, Calendar, User, Clock, X, ChevronRight, BookOpen } from "lucide-react";
 import { BlogItem } from "../types";
 import { blogData } from "../data";
+import { useCMS } from "../context/CMSContext";
 
 export default function Blog() {
   const [activePost, setActivePost] = useState<BlogItem | null>(null);
   const [drawerSubscribed, setDrawerSubscribed] = useState(false);
+  const { cmsData } = useCMS();
+
+  const blogList = (cmsData?.blog && cmsData.blog.length > 0) ? cmsData.blog : blogData;
 
   return (
     <section id="blog" className="py-24 bg-ginosko-dark relative overflow-hidden border-t border-white/5">
@@ -30,7 +34,7 @@ export default function Blog() {
 
         {/* Blog Post Cards Grid */}
         <div id="blog-grid" className="grid grid-cols-1 md:grid-cols-3 gap-8">
-          {blogData.map((post, idx) => (
+          {blogList.map((post, idx) => (
             <motion.div
               id={`blog-card-${post.id}`}
               key={post.id}
