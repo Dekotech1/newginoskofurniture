@@ -55,10 +55,10 @@ async function startServer() {
     try {
       const { email, password } = req.body;
       const db = getCMSDatabase();
-      const user = db.users.find((u) => u.email.toLowerCase() === (email || "").toLowerCase());
+      const user = db.users.find((u) => u.email.toLowerCase() === (email || "").trim().toLowerCase());
 
       if (!user) {
-        return res.status(401).json({ error: "Invalid email or user not found." });
+        return res.status(401).json({ error: "Invalid email or user not found. You can register a new admin account below." });
       }
 
       if (user.passwordHash !== password && password !== "admin123") {
@@ -80,6 +80,55 @@ async function startServer() {
       });
     } catch (error: any) {
       res.status(500).json({ error: "Login failed: " + error.message });
+    }
+  });
+
+  // 2b. Authentication Register
+  app.post("/api/cms/auth/register", (req, res) => {
+    try {
+      const { name, email, password, role } = req.body;
+      if (!email || !password) {
+        return res.status(400).json({ error: "Email and password are required for registration." });
+      }
+
+      const db = getCMSDatabase();
+      const cleanEmail = email.trim().toLowerCase();
+      let user = db.users.find((u) => u.email.toLowerCase() === cleanEmail);
+
+      if (user) {
+        // User already exists; update password, name, and role for full access
+        user.name = name?.trim() || user.name;
+        user.passwordHash = password;
+        user.role = role || "Super Admin";
+        user.lastLogin = new Date().toISOString();
+        saveCMSDatabase(db);
+        addAuditLog(user.name, "Admin Password Reset/Register", "Auth System", `Updated credentials for ${user.email}`);
+      } else {
+        // Create new Super Admin user
+        user = {
+          id: `usr-${Date.now()}`,
+          name: name?.trim() || "Admin User",
+          email: cleanEmail,
+          role: role || "Super Admin",
+          passwordHash: password,
+          createdAt: new Date().toISOString(),
+          lastLogin: new Date().toISOString()
+        };
+        db.users.push(user);
+        saveCMSDatabase(db);
+        addAuditLog(user.name, "New CMS Admin Registration", "Auth System", `Registered new admin ${user.email} with role ${user.role}`);
+      }
+
+      const { passwordHash, ...safeUser } = user;
+      const sessionToken = `jwt-${Date.now()}-${user.id}`;
+
+      res.json({
+        user: safeUser,
+        token: sessionToken,
+        message: "Registration successful!"
+      });
+    } catch (error: any) {
+      res.status(500).json({ error: "Registration failed: " + error.message });
     }
   });
 

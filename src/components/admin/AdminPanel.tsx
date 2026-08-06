@@ -38,10 +38,15 @@ import {
 } from "lucide-react";
 
 export default function AdminPanel() {
-  const { user, login, logout, setIsAdminOpen, cmsData } = useCMS();
+  const { user, login, register, logout, setIsAdminOpen, cmsData } = useCMS();
   const [activeTab, setActiveTab] = useState<string>("dashboard");
+  const [authMode, setAuthMode] = useState<"login" | "register">("login");
   const [loginEmail, setLoginEmail] = useState("danganajohn72@gmail.com");
   const [loginPassword, setLoginPassword] = useState("admin123");
+  const [regName, setRegName] = useState("John Dangana");
+  const [regEmail, setRegEmail] = useState("danganajohn72@gmail.com");
+  const [regPassword, setRegPassword] = useState("admin123");
+  const [regRole, setRegRole] = useState<"Super Admin" | "Admin" | "Editor">("Super Admin");
   const [loginError, setLoginError] = useState("");
   const [isLoggingIn, setIsLoggingIn] = useState(false);
 
@@ -57,7 +62,19 @@ export default function AdminPanel() {
     }
   };
 
-  // If not authenticated, render Login Dialog
+  // Register Submit
+  const handleRegisterSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setLoginError("");
+    setIsLoggingIn(true);
+    const result = await register(regName, regEmail, regPassword, regRole);
+    setIsLoggingIn(false);
+    if (!result.success) {
+      setLoginError(result.error || "Registration failed.");
+    }
+  };
+
+  // If not authenticated, render Login / Register Dialog
   if (!user) {
     return (
       <div className="fixed inset-0 z-50 bg-black/90 backdrop-blur-xl flex items-center justify-center p-4">
@@ -77,8 +94,42 @@ export default function AdminPanel() {
               Ginosko Enterprise CMS
             </h2>
             <p className="text-xs text-stone-400">
-              Sign in with your administrative credentials to manage live website content.
+              {authMode === "login"
+                ? "Sign in with your administrative credentials to manage live website content."
+                : "Register your personal email address to gain full Super Admin access."}
             </p>
+          </div>
+
+          {/* Mode Switcher */}
+          <div className="flex rounded-xl bg-stone-950 p-1 border border-stone-800">
+            <button
+              type="button"
+              onClick={() => {
+                setAuthMode("login");
+                setLoginError("");
+              }}
+              className={`flex-1 py-2 text-xs font-semibold rounded-lg transition-all ${
+                authMode === "login"
+                  ? "bg-stone-800 text-ginosko-gold shadow-sm"
+                  : "text-stone-400 hover:text-white"
+              }`}
+            >
+              Sign In
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                setAuthMode("register");
+                setLoginError("");
+              }}
+              className={`flex-1 py-2 text-xs font-semibold rounded-lg transition-all ${
+                authMode === "register"
+                  ? "bg-stone-800 text-ginosko-gold shadow-sm"
+                  : "text-stone-400 hover:text-white"
+              }`}
+            >
+              Register Personal Email
+            </button>
           </div>
 
           {loginError && (
@@ -87,51 +138,121 @@ export default function AdminPanel() {
             </div>
           )}
 
-          <form onSubmit={handleLoginSubmit} className="space-y-4">
-            <div>
-              <label className="block text-xs font-semibold text-stone-400 mb-1.5">
-                Admin Email Address
-              </label>
-              <input
-                type="email"
-                required
-                value={loginEmail}
-                onChange={(e) => setLoginEmail(e.target.value)}
-                className="w-full px-4 py-3 rounded-xl bg-stone-950 border border-stone-800 text-white text-sm focus:outline-none focus:border-ginosko-gold transition-colors"
-                placeholder="danganajohn72@gmail.com"
-              />
-            </div>
+          {authMode === "login" ? (
+            <form onSubmit={handleLoginSubmit} className="space-y-4">
+              <div>
+                <label className="block text-xs font-semibold text-stone-400 mb-1.5">
+                  Admin Email Address
+                </label>
+                <input
+                  type="email"
+                  required
+                  value={loginEmail}
+                  onChange={(e) => setLoginEmail(e.target.value)}
+                  className="w-full px-4 py-3 rounded-xl bg-stone-950 border border-stone-800 text-white text-sm focus:outline-none focus:border-ginosko-gold transition-colors"
+                  placeholder="danganajohn72@gmail.com"
+                />
+              </div>
 
-            <div>
-              <label className="block text-xs font-semibold text-stone-400 mb-1.5">
-                Password
-              </label>
-              <input
-                type="password"
-                required
-                value={loginPassword}
-                onChange={(e) => setLoginPassword(e.target.value)}
-                className="w-full px-4 py-3 rounded-xl bg-stone-950 border border-stone-800 text-white text-sm focus:outline-none focus:border-ginosko-gold transition-colors font-mono"
-                placeholder="••••••••"
-              />
-            </div>
+              <div>
+                <label className="block text-xs font-semibold text-stone-400 mb-1.5">
+                  Password
+                </label>
+                <input
+                  type="password"
+                  required
+                  value={loginPassword}
+                  onChange={(e) => setLoginPassword(e.target.value)}
+                  className="w-full px-4 py-3 rounded-xl bg-stone-950 border border-stone-800 text-white text-sm focus:outline-none focus:border-ginosko-gold transition-colors font-mono"
+                  placeholder="••••••••"
+                />
+              </div>
 
-            <button
-              type="submit"
-              disabled={isLoggingIn}
-              className="w-full py-3.5 rounded-xl bg-ginosko-gold text-ginosko-dark font-bold text-sm hover:bg-yellow-400 transition-all shadow-lg hover:shadow-ginosko-gold/20 flex items-center justify-center gap-2 cursor-pointer"
-            >
-              <Lock className="w-4 h-4" />
-              {isLoggingIn ? "Authenticating..." : "Access Control Panel"}
-            </button>
-          </form>
+              <button
+                type="submit"
+                disabled={isLoggingIn}
+                className="w-full py-3.5 rounded-xl bg-ginosko-gold text-ginosko-dark font-bold text-sm hover:bg-yellow-400 transition-all shadow-lg hover:shadow-ginosko-gold/20 flex items-center justify-center gap-2 cursor-pointer"
+              >
+                <Lock className="w-4 h-4" />
+                {isLoggingIn ? "Authenticating..." : "Access Control Panel"}
+              </button>
+            </form>
+          ) : (
+            <form onSubmit={handleRegisterSubmit} className="space-y-4">
+              <div>
+                <label className="block text-xs font-semibold text-stone-400 mb-1.5">
+                  Your Full Name
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={regName}
+                  onChange={(e) => setRegName(e.target.value)}
+                  className="w-full px-4 py-2.5 rounded-xl bg-stone-950 border border-stone-800 text-white text-sm focus:outline-none focus:border-ginosko-gold transition-colors"
+                  placeholder="John Dangana"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-stone-400 mb-1.5">
+                  Personal Email Address
+                </label>
+                <input
+                  type="email"
+                  required
+                  value={regEmail}
+                  onChange={(e) => setRegEmail(e.target.value)}
+                  className="w-full px-4 py-2.5 rounded-xl bg-stone-950 border border-stone-800 text-white text-sm focus:outline-none focus:border-ginosko-gold transition-colors"
+                  placeholder="danganajohn72@gmail.com"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-stone-400 mb-1.5">
+                  Set Custom Admin Password
+                </label>
+                <input
+                  type="password"
+                  required
+                  value={regPassword}
+                  onChange={(e) => setRegPassword(e.target.value)}
+                  className="w-full px-4 py-2.5 rounded-xl bg-stone-950 border border-stone-800 text-white text-sm focus:outline-none focus:border-ginosko-gold transition-colors font-mono"
+                  placeholder="Choose a strong password"
+                />
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-stone-400 mb-1.5">
+                  System Administrative Role
+                </label>
+                <select
+                  value={regRole}
+                  onChange={(e) => setRegRole(e.target.value as any)}
+                  className="w-full px-4 py-2.5 rounded-xl bg-stone-950 border border-stone-800 text-white text-sm focus:outline-none focus:border-ginosko-gold transition-colors"
+                >
+                  <option value="Super Admin">Super Admin (Full System Control)</option>
+                  <option value="Admin">Admin (Content & Submissions)</option>
+                  <option value="Editor">Editor (Content Management)</option>
+                </select>
+              </div>
+
+              <button
+                type="submit"
+                disabled={isLoggingIn}
+                className="w-full py-3.5 rounded-xl bg-ginosko-gold text-ginosko-dark font-bold text-sm hover:bg-yellow-400 transition-all shadow-lg hover:shadow-ginosko-gold/20 flex items-center justify-center gap-2 cursor-pointer"
+              >
+                <Shield className="w-4 h-4" />
+                {isLoggingIn ? "Registering Access..." : "Register & Enter CMS Portal"}
+              </button>
+            </form>
+          )}
 
           <div className="p-3.5 rounded-2xl bg-stone-950 border border-stone-800/80 text-center space-y-1">
             <span className="text-[11px] text-ginosko-gold font-semibold uppercase tracking-wider block">
-              Default Super Admin Pre-Configured
+              Pre-Configured Super Admin Email
             </span>
             <p className="text-[11px] text-stone-400 font-mono">
-              Email: <span className="text-white">danganajohn72@gmail.com</span> | Password: <span className="text-white">admin123</span>
+              Email: <span className="text-white">danganajohn72@gmail.com</span> | Default Pass: <span className="text-white">admin123</span>
             </p>
           </div>
         </div>

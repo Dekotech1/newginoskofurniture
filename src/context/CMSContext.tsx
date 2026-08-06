@@ -178,6 +178,7 @@ interface CMSContextType {
   isAdminOpen: boolean;
   setIsAdminOpen: (open: boolean) => void;
   login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
+  register: (name: string, email: string, password: string, role?: string) => Promise<{ success: boolean; error?: string }>;
   logout: () => void;
   updateSection: (section: keyof CMSData, data: any) => Promise<boolean>;
   updateFullCMS: (newData: Partial<CMSData>) => Promise<boolean>;
@@ -265,6 +266,29 @@ export const CMSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       return { success: false, error: result.error || "Login failed" };
     } catch (err: any) {
       return { success: false, error: err.message || "Invalid credentials or server unavailable" };
+    }
+  };
+
+  // Auth Register
+  const register = async (name: string, email: string, password: string, role: string = "Super Admin") => {
+    try {
+      const res = await fetch("/api/cms/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, password, role })
+      });
+      const result = await parseJSON(res);
+      if (res.ok && result.user) {
+        setUser(result.user);
+        setToken(result.token);
+        localStorage.setItem("ginosko_cms_user", JSON.stringify(result.user));
+        localStorage.setItem("ginosko_cms_token", result.token);
+        await refreshCMS();
+        return { success: true };
+      }
+      return { success: false, error: result.error || "Registration failed" };
+    } catch (err: any) {
+      return { success: false, error: err.message || "Server unavailable or invalid response" };
     }
   };
 
@@ -468,6 +492,7 @@ export const CMSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         isAdminOpen,
         setIsAdminOpen,
         login,
+        register,
         logout,
         updateSection,
         updateFullCMS,
