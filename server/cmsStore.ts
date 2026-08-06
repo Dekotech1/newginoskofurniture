@@ -348,7 +348,7 @@ const initialSeedData: CMSDatabase = {
     {
       id: "usr-superadmin",
       name: "John Dangana",
-      email: "admin@ginosko.com",
+      email: "danganajohn72@gmail.com",
       role: "Super Admin",
       avatar: "/src/assets/images/john_dangana_original_photo_1783270650113.jpg",
       passwordHash: "admin123", // Default password for initial access
@@ -384,7 +384,38 @@ export function getCMSDatabase(): CMSDatabase {
       return initialSeedData;
     }
     const raw = fs.readFileSync(DB_FILE, "utf8");
-    return JSON.parse(raw);
+    const db: CMSDatabase = JSON.parse(raw);
+
+    // Ensure danganajohn72@gmail.com is registered as Super Admin
+    let userUpdated = false;
+    if (db.users) {
+      const john = db.users.find((u) => u.email.toLowerCase() === "danganajohn72@gmail.com");
+      if (!john) {
+        const oldAdminIdx = db.users.findIndex((u) => u.email.toLowerCase() === "admin@ginosko.com" || u.id === "usr-superadmin");
+        if (oldAdminIdx !== -1) {
+          db.users[oldAdminIdx].email = "danganajohn72@gmail.com";
+          db.users[oldAdminIdx].name = "John Dangana";
+          db.users[oldAdminIdx].role = "Super Admin";
+        } else {
+          db.users.unshift({
+            id: "usr-superadmin",
+            name: "John Dangana",
+            email: "danganajohn72@gmail.com",
+            role: "Super Admin",
+            avatar: "/src/assets/images/john_dangana_original_photo_1783270650113.jpg",
+            passwordHash: "admin123",
+            createdAt: new Date().toISOString()
+          });
+        }
+        userUpdated = true;
+      }
+    }
+
+    if (userUpdated) {
+      saveCMSDatabase(db);
+    }
+
+    return db;
   } catch (error) {
     console.error("Failed to read CMS Database file, returning seed:", error);
     return initialSeedData;

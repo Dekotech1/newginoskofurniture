@@ -40,7 +40,7 @@ import {
 export default function AdminPanel() {
   const { user, login, logout, setIsAdminOpen, cmsData } = useCMS();
   const [activeTab, setActiveTab] = useState<string>("dashboard");
-  const [loginEmail, setLoginEmail] = useState("admin@ginosko.com");
+  const [loginEmail, setLoginEmail] = useState("danganajohn72@gmail.com");
   const [loginPassword, setLoginPassword] = useState("admin123");
   const [loginError, setLoginError] = useState("");
   const [isLoggingIn, setIsLoggingIn] = useState(false);
@@ -98,7 +98,7 @@ export default function AdminPanel() {
                 value={loginEmail}
                 onChange={(e) => setLoginEmail(e.target.value)}
                 className="w-full px-4 py-3 rounded-xl bg-stone-950 border border-stone-800 text-white text-sm focus:outline-none focus:border-ginosko-gold transition-colors"
-                placeholder="admin@ginosko.com"
+                placeholder="danganajohn72@gmail.com"
               />
             </div>
 
@@ -131,7 +131,7 @@ export default function AdminPanel() {
               Default Super Admin Pre-Configured
             </span>
             <p className="text-[11px] text-stone-400 font-mono">
-              Email: <span className="text-white">admin@ginosko.com</span> | Password: <span className="text-white">admin123</span>
+              Email: <span className="text-white">danganajohn72@gmail.com</span> | Password: <span className="text-white">admin123</span>
             </p>
           </div>
         </div>
