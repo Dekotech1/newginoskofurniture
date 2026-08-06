@@ -19,10 +19,15 @@ import Careers from "./components/Careers";
 import Contact from "./components/Contact";
 import QuoteAdvisor from "./components/QuoteAdvisor";
 import Footer from "./components/Footer";
+import AdminPanel from "./components/admin/AdminPanel";
+import { useCMS } from "./context/CMSContext";
+import { ShieldCheck } from "lucide-react";
 
 export default function App() {
   const [isAdvisorOpen, setIsAdvisorOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("hero");
+  const { isAdminOpen, setIsAdminOpen, user } = useCMS();
+
 
   useEffect(() => {
     const handleScroll = () => {
@@ -112,6 +117,22 @@ export default function App() {
 
       {/* SIGNATURE FEATURE: Gemini-Powered Bespoke Space Planner Modal */}
       <QuoteAdvisor isOpen={isAdvisorOpen} onClose={() => setIsAdvisorOpen(false)} />
+
+      {/* ENTERPRISE CMS: Admin Dashboard Modal Overlay */}
+      {isAdminOpen && <AdminPanel />}
+
+      {/* Floating CMS Portal Access Trigger */}
+      <button
+        id="floating-cms-trigger"
+        onClick={() => setIsAdminOpen(true)}
+        className="fixed bottom-6 left-6 z-40 px-4 py-2.5 bg-stone-900/95 hover:bg-stone-800 border border-ginosko-gold/40 hover:border-ginosko-gold text-ginosko-gold text-xs font-mono font-medium rounded-full shadow-2xl backdrop-blur-md flex items-center gap-2.5 group transition-all duration-300 hover:scale-105 cursor-pointer"
+        title="Open Ginosko Enterprise CMS Control Panel"
+      >
+        <ShieldCheck className="w-4 h-4 text-ginosko-gold group-hover:rotate-12 transition-transform" />
+        <span className="font-sans text-[11px] font-bold tracking-wider uppercase">
+          {user ? `CMS: ${user.name}` : "CMS Admin"}
+        </span>
+      </button>
 
     </div>
   );

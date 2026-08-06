@@ -5,7 +5,8 @@
 
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "motion/react";
-import { Menu, X, Phone, Hammer } from "lucide-react";
+import { Menu, X, Phone, Hammer, ShieldCheck } from "lucide-react";
+import { useCMS } from "../context/CMSContext";
 
 interface HeaderProps {
   activeSection: string;
@@ -16,6 +17,7 @@ interface HeaderProps {
 export default function Header({ activeSection, onNavigate, openAdvisor }: HeaderProps) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { setIsAdminOpen, user } = useCMS();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -102,7 +104,7 @@ export default function Header({ activeSection, onNavigate, openAdvisor }: Heade
           </nav>
 
           {/* Call to Actions */}
-          <div id="nav-actions" className="hidden lg:flex items-center space-x-6">
+          <div id="nav-actions" className="hidden lg:flex items-center space-x-5">
             <a
               id="nav-phone-link"
               href="tel:+234800GINOSKO"
@@ -114,9 +116,18 @@ export default function Header({ activeSection, onNavigate, openAdvisor }: Heade
             <button
               id="nav-advisor-btn"
               onClick={openAdvisor}
-              className="px-5 py-2.5 bg-ginosko-gold hover:bg-ginosko-amber text-ginosko-dark font-sans text-xs tracking-widest font-semibold uppercase rounded-sm transition-all duration-300 transform hover:-translate-y-0.5 active:translate-y-0 shadow-lg hover:shadow-ginosko-gold/20"
+              className="px-4 py-2.5 bg-ginosko-gold hover:bg-ginosko-amber text-ginosko-dark font-sans text-xs tracking-widest font-semibold uppercase rounded-sm transition-all duration-300 transform hover:-translate-y-0.5 active:translate-y-0 shadow-lg hover:shadow-ginosko-gold/20"
             >
               AI Space Planner
+            </button>
+            <button
+              id="nav-cms-btn"
+              onClick={() => setIsAdminOpen(true)}
+              className="px-4 py-2.5 bg-white/5 hover:bg-white/10 border border-ginosko-gold/40 text-ginosko-gold hover:text-white font-sans text-xs tracking-widest font-semibold uppercase rounded-sm transition-all duration-300 flex items-center gap-2 cursor-pointer shadow-sm hover:border-ginosko-gold"
+              title="Open Enterprise CMS Management Portal"
+            >
+              <ShieldCheck className="w-4 h-4 text-ginosko-gold" />
+              <span>{user ? "CMS Admin" : "CMS Portal"}</span>
             </button>
           </div>
 
@@ -178,6 +189,17 @@ export default function Header({ activeSection, onNavigate, openAdvisor }: Heade
                 className="w-full py-4 bg-ginosko-gold text-ginosko-dark font-sans text-xs tracking-widest font-semibold uppercase rounded-sm text-center shadow-md"
               >
                 Launch AI Space Planner
+              </button>
+              <button
+                id="mobile-nav-cms-btn"
+                onClick={() => {
+                  setIsAdminOpen(true);
+                  setMobileMenuOpen(false);
+                }}
+                className="w-full py-3 bg-white/5 border border-ginosko-gold/40 text-ginosko-gold font-sans text-xs tracking-widest font-semibold uppercase rounded-sm text-center shadow-md flex items-center justify-center gap-2"
+              >
+                <ShieldCheck className="w-4 h-4 text-ginosko-gold" />
+                <span>{user ? "Open CMS Dashboard" : "CMS Admin Portal"}</span>
               </button>
               <div className="flex justify-between items-center text-[10px] tracking-widest text-white/50 font-mono">
                 <span>LAGOS, NIGERIA</span>
