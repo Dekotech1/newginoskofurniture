@@ -3,9 +3,14 @@ import { useCMS } from "../../context/CMSContext";
 import DashboardOverview from "./DashboardOverview";
 import PageManager from "./PageManager";
 import HomepageBuilder from "./HomepageBuilder";
-import BlogManager from "./BlogManager";
-import PortfolioManager from "./PortfolioManager";
+import AboutManager from "./AboutManager";
 import ServicesManager from "./ServicesManager";
+import PortfolioManager from "./PortfolioManager";
+import ProcessManager from "./ProcessManager";
+import TestimonialsManager from "./TestimonialsManager";
+import BlogManager from "./BlogManager";
+import CareersManager from "./CareersManager";
+import ContactManager from "./ContactManager";
 import MediaLibraryManager from "./MediaLibraryManager";
 import NavigationManager from "./NavigationManager";
 import FormSubmissionsManager from "./FormSubmissionsManager";
@@ -17,16 +22,19 @@ import SecurityAuditManager from "./SecurityAuditManager";
 import {
   LayoutDashboard,
   FileText,
-  Layout,
-  TrendingUp,
-  FolderKanban,
+  Home,
+  Users,
   Briefcase,
+  FolderKanban,
+  Layers,
+  MessageSquareQuote,
+  TrendingUp,
+  PhoneCall,
   Image as ImageIcon,
   Settings,
   Inbox,
   Globe,
   Search,
-  Users,
   ShieldCheck,
   LogOut,
   Eye,
@@ -260,21 +268,34 @@ export default function AdminPanel() {
     );
   }
 
-  const navMenuItems = [
+  const overviewItems = [
     { id: "dashboard", label: "Dashboard Overview", icon: LayoutDashboard },
-    { id: "pages", label: "Page Manager", icon: FileText },
-    { id: "homepage", label: "Homepage Builder", icon: Layout },
-    { id: "portfolio", label: "Projects & Portfolio", icon: FolderKanban },
-    { id: "blog", label: "Blog & Insights", icon: TrendingUp },
-    { id: "services", label: "Services", icon: Briefcase },
+    { id: "pages", label: "Page Manager", icon: FileText }
+  ];
+
+  const architectureContentItems = [
+    { id: "homepage", num: "1", label: "Home Page", icon: Home },
+    { id: "about", num: "2", label: "About", icon: Users },
+    { id: "services", num: "3", label: "Services", icon: Briefcase },
+    { id: "portfolio", num: "4", label: "Portfolio", icon: FolderKanban },
+    { id: "process", num: "5", label: "Process", icon: Layers },
+    { id: "testimonials", num: "6", label: "Testimonials", icon: MessageSquareQuote },
+    { id: "blog", num: "7", label: "Blog", icon: TrendingUp },
+    { id: "careers", num: "8", label: "Careers", icon: Briefcase },
+    { id: "contact", num: "9", label: "Contacts", icon: PhoneCall }
+  ];
+
+  const platformItems = [
     { id: "media", label: "Media Library", icon: ImageIcon },
-    { id: "navigation", label: "Navigation Menus", icon: Settings },
     { id: "submissions", label: "Form Submissions", icon: Inbox, badge: cmsData?.submissions.filter(s => s.status === 'unread').length || 0 },
+    { id: "navigation", label: "Navigation Menus", icon: Settings },
     { id: "settings", label: "Website Settings", icon: Globe },
     { id: "seo", label: "SEO Meta Tags", icon: Search },
     { id: "users", label: "Admin Users", icon: Users },
     { id: "audit", label: "Security & Audit", icon: ShieldCheck }
   ];
+
+  const allNavItems = [...overviewItems, ...architectureContentItems, ...platformItems];
 
   return (
     <div className="fixed inset-0 z-50 bg-ginosko-dark text-white flex flex-col font-sans overflow-hidden">
@@ -329,39 +350,102 @@ export default function AdminPanel() {
       {/* Main Container: Sidebar + Content Area */}
       <div className="flex-1 flex overflow-hidden">
         {/* Sidebar */}
-        <aside className="w-64 bg-stone-950/90 border-r border-stone-800 p-4 overflow-y-auto space-y-1 shrink-0 hidden md:block">
-          <div className="px-3 py-2 text-[10px] font-bold text-stone-500 uppercase tracking-widest">
-            Content Management
+        <aside className="w-64 bg-stone-950/90 border-r border-stone-800 p-3.5 overflow-y-auto space-y-4 shrink-0 hidden md:block">
+          {/* Section 1: Overview */}
+          <div className="space-y-1">
+            <div className="px-3 py-1 text-[10px] font-bold text-stone-500 uppercase tracking-widest">
+              Overview & Pages
+            </div>
+            {overviewItems.map((item) => {
+              const Icon = item.icon;
+              const isActive = activeTab === item.id;
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => setActiveTab(item.id)}
+                  className={`w-full px-3 py-2 rounded-xl text-xs font-medium flex items-center justify-between transition-all cursor-pointer ${
+                    isActive
+                      ? "bg-ginosko-gold/15 text-ginosko-gold font-semibold border border-ginosko-gold/30 shadow-md"
+                      : "text-stone-400 hover:text-white hover:bg-stone-900"
+                  }`}
+                >
+                  <div className="flex items-center gap-2.5">
+                    <Icon className={`w-4 h-4 ${isActive ? "text-ginosko-gold" : "text-stone-500"}`} />
+                    <span>{item.label}</span>
+                  </div>
+                  {isActive && <ChevronRight className="w-3.5 h-3.5 text-ginosko-gold" />}
+                </button>
+              );
+            })}
           </div>
 
-          {navMenuItems.map((item) => {
-            const Icon = item.icon;
-            const isActive = activeTab === item.id;
-            return (
-              <button
-                key={item.id}
-                onClick={() => setActiveTab(item.id)}
-                className={`w-full px-3.5 py-2.5 rounded-xl text-xs font-medium flex items-center justify-between transition-all cursor-pointer ${
-                  isActive
-                    ? "bg-ginosko-gold/15 text-ginosko-gold font-semibold border border-ginosko-gold/30 shadow-md"
-                    : "text-stone-400 hover:text-white hover:bg-stone-900"
-                }`}
-              >
-                <div className="flex items-center gap-2.5">
-                  <Icon className={`w-4 h-4 ${isActive ? "text-ginosko-gold" : "text-stone-500"}`} />
-                  <span>{item.label}</span>
-                </div>
+          {/* Section 2: Website Architecture Content (1-9) */}
+          <div className="space-y-1 pt-2 border-t border-stone-900">
+            <div className="px-3 py-1 text-[10px] font-bold text-ginosko-gold uppercase tracking-widest flex items-center justify-between">
+              <span>Website Architecture</span>
+              <span className="text-[9px] font-mono text-stone-500">1 - 9</span>
+            </div>
 
-                {item.badge ? (
-                  <span className="px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/30 text-[10px] font-bold animate-pulse">
-                    {item.badge}
-                  </span>
-                ) : (
-                  isActive && <ChevronRight className="w-3.5 h-3.5 text-ginosko-gold" />
-                )}
-              </button>
-            );
-          })}
+            {architectureContentItems.map((item) => {
+              const Icon = item.icon;
+              const isActive = activeTab === item.id;
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => setActiveTab(item.id)}
+                  className={`w-full px-3 py-2 rounded-xl text-xs font-medium flex items-center justify-between transition-all cursor-pointer ${
+                    isActive
+                      ? "bg-ginosko-gold text-ginosko-dark font-bold shadow-md shadow-ginosko-gold/10"
+                      : "text-stone-300 hover:text-white hover:bg-stone-900"
+                  }`}
+                >
+                  <div className="flex items-center gap-2.5">
+                    <span className={`w-4 h-4 rounded-md text-[10px] font-bold font-mono flex items-center justify-center shrink-0 ${
+                      isActive ? "bg-ginosko-dark/20 text-ginosko-dark" : "bg-stone-800 text-ginosko-gold"
+                    }`}>
+                      {item.num}
+                    </span>
+                    <span className="truncate">{item.label}</span>
+                  </div>
+                  {isActive && <ChevronRight className="w-3.5 h-3.5 text-ginosko-dark shrink-0" />}
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Section 3: Platform & Utilities */}
+          <div className="space-y-1 pt-2 border-t border-stone-900">
+            <div className="px-3 py-1 text-[10px] font-bold text-stone-500 uppercase tracking-widest">
+              Platform & Media
+            </div>
+            {platformItems.map((item) => {
+              const Icon = item.icon;
+              const isActive = activeTab === item.id;
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => setActiveTab(item.id)}
+                  className={`w-full px-3 py-2 rounded-xl text-xs font-medium flex items-center justify-between transition-all cursor-pointer ${
+                    isActive
+                      ? "bg-ginosko-gold/15 text-ginosko-gold font-semibold border border-ginosko-gold/30 shadow-md"
+                      : "text-stone-400 hover:text-white hover:bg-stone-900"
+                  }`}
+                >
+                  <div className="flex items-center gap-2.5">
+                    <Icon className={`w-4 h-4 ${isActive ? "text-ginosko-gold" : "text-stone-500"}`} />
+                    <span className="truncate">{item.label}</span>
+                  </div>
+                  {item.badge ? (
+                    <span className="px-2 py-0.5 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/30 text-[10px] font-bold animate-pulse">
+                      {item.badge}
+                    </span>
+                  ) : (
+                    isActive && <ChevronRight className="w-3.5 h-3.5 text-ginosko-gold" />
+                  )}
+                </button>
+              );
+            })}
+          </div>
         </aside>
 
         {/* Mobile Navigation Dropdown */}
@@ -371,9 +455,9 @@ export default function AdminPanel() {
             onChange={(e) => setActiveTab(e.target.value)}
             className="w-full px-3 py-2 rounded-xl bg-stone-950 border border-stone-800 text-white text-xs"
           >
-            {navMenuItems.map((item) => (
+            {allNavItems.map((item) => (
               <option key={item.id} value={item.id}>
-                {item.label} {item.badge ? `(${item.badge} new)` : ""}
+                {(item as any).num ? `${(item as any).num}. ` : ""}{item.label} {(item as any).badge ? `(${(item as any).badge} new)` : ""}
               </option>
             ))}
           </select>
@@ -385,9 +469,14 @@ export default function AdminPanel() {
             {activeTab === "dashboard" && <DashboardOverview onNavigateTab={(tab) => setActiveTab(tab)} />}
             {activeTab === "pages" && <PageManager />}
             {activeTab === "homepage" && <HomepageBuilder />}
-            {activeTab === "portfolio" && <PortfolioManager />}
-            {activeTab === "blog" && <BlogManager />}
+            {activeTab === "about" && <AboutManager />}
             {activeTab === "services" && <ServicesManager />}
+            {activeTab === "portfolio" && <PortfolioManager />}
+            {activeTab === "process" && <ProcessManager />}
+            {activeTab === "testimonials" && <TestimonialsManager />}
+            {activeTab === "blog" && <BlogManager />}
+            {activeTab === "careers" && <CareersManager />}
+            {activeTab === "contact" && <ContactManager />}
             {activeTab === "media" && <MediaLibraryManager />}
             {activeTab === "navigation" && <NavigationManager />}
             {activeTab === "submissions" && <FormSubmissionsManager />}

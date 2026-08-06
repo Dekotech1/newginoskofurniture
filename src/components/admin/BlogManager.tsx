@@ -160,115 +160,118 @@ export default function BlogManager() {
         ))}
       </div>
 
-      {/* Article Editor Modal */}
+      {/* Article Editor Modal - Inspired by xubraminenig.com/admin/projects */}
       {editingPost && (
-        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
-          <div className="bg-stone-900 border border-stone-800 rounded-2xl max-w-3xl w-full p-6 space-y-5 shadow-2xl max-h-[90vh] overflow-y-auto">
-            <div className="flex items-center justify-between border-b border-stone-800 pb-3">
-              <h3 className="text-xl font-display font-bold text-white">
-                Edit Article: {editingPost.title}
+        <div className="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-[#0B1322] border border-slate-700/80 rounded-2xl max-w-xl w-full p-6 space-y-4 shadow-2xl max-h-[90vh] overflow-y-auto text-slate-100">
+            <div className="flex items-center justify-between border-b border-slate-800/80 pb-3">
+              <h3 className="text-base font-semibold text-white tracking-wide">
+                Edit article
               </h3>
               <button
                 onClick={() => setEditingPost(null)}
-                className="text-stone-400 hover:text-white text-sm cursor-pointer"
+                className="p-1 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-white transition-colors cursor-pointer"
               >
-                Close ✕
+                ✕
               </button>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-              <div className="md:col-span-2">
-                <label className="block text-xs font-semibold text-stone-400 mb-1">Article Title</label>
+            <div className="space-y-3.5 text-xs">
+              {/* Title */}
+              <div>
+                <label className="block text-xs font-medium text-slate-300 mb-1">Article Title</label>
                 <input
                   type="text"
                   value={editingPost.title}
                   onChange={(e) => setEditingPost({ ...editingPost, title: e.target.value })}
-                  className="w-full px-3.5 py-2 rounded-xl bg-stone-950 border border-stone-800 text-white focus:outline-none focus:border-ginosko-gold"
+                  placeholder="Title..."
+                  className="w-full px-3 py-2 rounded-lg bg-[#070D18] border border-slate-700/80 text-white placeholder-slate-500 focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-400/50 text-xs transition-all"
                 />
               </div>
 
+              {/* Category & Author */}
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-medium text-slate-300 mb-1">Category</label>
+                  <input
+                    type="text"
+                    value={editingPost.category}
+                    onChange={(e) => setEditingPost({ ...editingPost, category: e.target.value })}
+                    placeholder="e.g. Joinery Guide"
+                    className="w-full px-3 py-2 rounded-lg bg-[#070D18] border border-slate-700/80 text-white placeholder-slate-500 focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-400/50 text-xs transition-all"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-medium text-slate-300 mb-1">Author</label>
+                  <input
+                    type="text"
+                    value={editingPost.author}
+                    onChange={(e) => setEditingPost({ ...editingPost, author: e.target.value })}
+                    placeholder="Author name..."
+                    className="w-full px-3 py-2 rounded-lg bg-[#070D18] border border-slate-700/80 text-white placeholder-slate-500 focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-400/50 text-xs transition-all"
+                  />
+                </div>
+              </div>
+
+              {/* Date & Read time */}
+              <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <label className="block text-xs font-medium text-slate-300 mb-1">Publishing Date</label>
+                  <input
+                    type="text"
+                    value={editingPost.date}
+                    onChange={(e) => setEditingPost({ ...editingPost, date: e.target.value })}
+                    className="w-full px-3 py-2 rounded-lg bg-[#070D18] border border-slate-700/80 text-white focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-400/50 text-xs transition-all"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-medium text-slate-300 mb-1">Reading Time</label>
+                  <input
+                    type="text"
+                    value={editingPost.readTime}
+                    onChange={(e) => setEditingPost({ ...editingPost, readTime: e.target.value })}
+                    className="w-full px-3 py-2 rounded-lg bg-[#070D18] border border-slate-700/80 text-white focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-400/50 text-xs transition-all"
+                  />
+                </div>
+              </div>
+
+              {/* Cover Image Uploader */}
               <div>
-                <label className="block text-xs font-semibold text-stone-400 mb-1">Category</label>
-                <input
-                  type="text"
-                  value={editingPost.category}
-                  onChange={(e) => setEditingPost({ ...editingPost, category: e.target.value })}
-                  className="w-full px-3.5 py-2 rounded-xl bg-stone-950 border border-stone-800 text-white focus:outline-none focus:border-ginosko-gold"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-semibold text-stone-400 mb-1">Author Name</label>
-                <input
-                  type="text"
-                  value={editingPost.author}
-                  onChange={(e) => setEditingPost({ ...editingPost, author: e.target.value })}
-                  className="w-full px-3.5 py-2 rounded-xl bg-stone-950 border border-stone-800 text-white focus:outline-none focus:border-ginosko-gold"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-semibold text-stone-400 mb-1">Publishing Date</label>
-                <input
-                  type="text"
-                  value={editingPost.date}
-                  onChange={(e) => setEditingPost({ ...editingPost, date: e.target.value })}
-                  className="w-full px-3.5 py-2 rounded-xl bg-stone-950 border border-stone-800 text-white focus:outline-none focus:border-ginosko-gold"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-semibold text-stone-400 mb-1">Estimated Reading Time</label>
-                <input
-                  type="text"
-                  value={editingPost.readTime}
-                  onChange={(e) => setEditingPost({ ...editingPost, readTime: e.target.value })}
-                  className="w-full px-3.5 py-2 rounded-xl bg-stone-950 border border-stone-800 text-white focus:outline-none focus:border-ginosko-gold"
-                />
-              </div>
-
-              <div className="md:col-span-2">
                 <ImageUploader
-                  label="Featured Blog Article Cover Image"
+                  label="Cover image"
                   value={editingPost.image}
                   onChange={(url) => setEditingPost({ ...editingPost, image: url })}
                   folder="Blog Covers"
                 />
               </div>
 
-              <div className="md:col-span-2">
-                <label className="block text-xs font-semibold text-stone-400 mb-1">Short Excerpt / Teaser Summary</label>
+              {/* Excerpt */}
+              <div>
+                <label className="block text-xs font-medium text-slate-300 mb-1">Excerpt</label>
                 <textarea
                   rows={2}
                   value={editingPost.excerpt}
                   onChange={(e) => setEditingPost({ ...editingPost, excerpt: e.target.value })}
-                  className="w-full px-3.5 py-2 rounded-xl bg-stone-950 border border-stone-800 text-white focus:outline-none focus:border-ginosko-gold"
-                />
-              </div>
-
-              <div className="md:col-span-2">
-                <label className="block text-xs font-semibold text-stone-400 mb-1">Full Article Body Content</label>
-                <textarea
-                  rows={6}
-                  value={editingPost.content}
-                  onChange={(e) => setEditingPost({ ...editingPost, content: e.target.value })}
-                  className="w-full px-3.5 py-2 rounded-xl bg-stone-950 border border-stone-800 text-white focus:outline-none focus:border-ginosko-gold font-mono text-xs"
+                  placeholder="Short summary..."
+                  className="w-full px-3 py-2 rounded-lg bg-[#070D18] border border-slate-700/80 text-white placeholder-slate-500 focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-400/50 text-xs transition-all"
                 />
               </div>
             </div>
 
-            <div className="flex items-center justify-end gap-3 pt-4 border-t border-stone-800">
+            <div className="flex items-center justify-end gap-2.5 pt-3 border-t border-slate-800/80">
               <button
                 onClick={() => setEditingPost(null)}
-                className="px-4 py-2 rounded-xl bg-stone-800 text-stone-300 hover:bg-stone-700 text-sm cursor-pointer"
+                className="px-4 py-2 rounded-lg bg-slate-800/80 hover:bg-slate-700 text-slate-300 text-xs font-medium cursor-pointer transition-colors"
               >
                 Cancel
               </button>
               <button
                 onClick={handleSavePost}
-                className="px-5 py-2 rounded-xl bg-ginosko-gold text-ginosko-dark font-semibold hover:bg-yellow-400 transition-all flex items-center gap-2 text-sm cursor-pointer shadow-lg"
+                className="px-4 py-2 rounded-lg bg-amber-500 text-slate-950 font-semibold hover:bg-amber-400 transition-all flex items-center gap-1.5 text-xs cursor-pointer shadow-md"
               >
-                <Save className="w-4 h-4" /> Save & Publish Post
+                <Save className="w-3.5 h-3.5" /> Save changes
               </button>
             </div>
           </div>

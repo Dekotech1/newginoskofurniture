@@ -85,66 +85,33 @@ export default function ImageUploader({
         </label>
       )}
 
-      {/* Image Preview & Primary Controls */}
-      <div className="p-3 rounded-2xl bg-stone-950 border border-stone-800 space-y-3">
+      {/* Cover Image Box matching the inspiration UI layout */}
+      <div className="space-y-2">
         {value ? (
-          <div className="relative group rounded-xl overflow-hidden bg-stone-900 border border-stone-800 flex items-center justify-center min-h-[120px]">
-            <img
-              src={value}
-              alt="Uploaded Preview"
-              className={`w-full object-cover rounded-xl max-h-56 ${
-                aspectRatio === "square" ? "aspect-square" : aspectRatio === "video" ? "aspect-video" : ""
-              }`}
-              onError={(e) => {
-                // Image load fallback
-                (e.target as HTMLElement).style.display = "none";
-              }}
-            />
-            <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2 p-2">
-              <label className="px-3 py-1.5 rounded-lg bg-ginosko-gold text-ginosko-dark text-xs font-bold flex items-center gap-1.5 cursor-pointer hover:bg-yellow-400 transition-colors">
-                <Upload className="w-3.5 h-3.5" />
-                Change Picture
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleFileChange}
-                  className="hidden"
-                />
-              </label>
-              <button
-                type="button"
-                onClick={() => setIsLibraryOpen(true)}
-                className="px-3 py-1.5 rounded-lg bg-stone-800 text-white text-xs font-bold flex items-center gap-1.5 hover:bg-stone-700 transition-colors cursor-pointer"
-              >
-                <FolderOpen className="w-3.5 h-3.5 text-ginosko-gold" />
-                Media Library
-              </button>
+          <div className="flex flex-col items-start gap-2">
+            <div className="relative group w-28 h-28 rounded-xl overflow-hidden bg-stone-900 border border-stone-700 shadow-md flex items-center justify-center">
+              <img
+                src={value}
+                alt="Cover Preview"
+                className="w-full h-full object-cover rounded-xl"
+                onError={(e) => {
+                  (e.target as HTMLElement).style.display = "none";
+                }}
+              />
               <button
                 type="button"
                 onClick={handleClear}
-                className="p-1.5 rounded-lg bg-red-600/80 text-white hover:bg-red-600 transition-colors cursor-pointer"
+                className="absolute top-1 right-1 p-1 rounded-md bg-black/70 text-rose-400 hover:text-rose-300 opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
                 title="Remove Picture"
               >
-                <Trash2 className="w-4 h-4" />
+                <Trash2 className="w-3.5 h-3.5" />
               </button>
             </div>
-          </div>
-        ) : (
-          <div className="border-2 border-dashed border-stone-800 hover:border-ginosko-gold/50 rounded-xl p-4 text-center transition-all bg-stone-900/50 flex flex-col items-center justify-center gap-2">
-            <div className="w-10 h-10 rounded-full bg-stone-800 flex items-center justify-center text-ginosko-gold mb-1">
-              <ImageIcon className="w-5 h-5" />
-            </div>
-            <p className="text-xs text-stone-300 font-medium">
-              No image selected yet
-            </p>
-            <p className="text-[11px] text-stone-500">
-              Upload a picture directly from your device gallery or choose from CMS media library
-            </p>
 
-            <div className="flex flex-wrap items-center justify-center gap-2 mt-1">
-              <label className="px-3.5 py-2 rounded-xl bg-ginosko-gold text-ginosko-dark text-xs font-bold flex items-center gap-1.5 cursor-pointer hover:bg-yellow-400 transition-all shadow-md">
-                <Upload className="w-3.5 h-3.5" />
-                {isProcessing ? "Uploading Picture..." : "Upload Picture"}
+            <div className="flex items-center gap-2">
+              <label className="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-white border border-slate-700 text-xs font-medium flex items-center gap-1.5 cursor-pointer transition-all shadow-sm">
+                <Upload className="w-3.5 h-3.5 text-amber-400" />
+                {isProcessing ? "Uploading..." : "Upload image"}
                 <input
                   type="file"
                   accept="image/*"
@@ -157,10 +124,41 @@ export default function ImageUploader({
               <button
                 type="button"
                 onClick={() => setIsLibraryOpen(true)}
-                className="px-3.5 py-2 rounded-xl bg-stone-800 text-stone-300 text-xs font-semibold flex items-center gap-1.5 hover:bg-stone-700 hover:text-white transition-all cursor-pointer"
+                className="px-2.5 py-1.5 rounded-lg bg-stone-900 hover:bg-stone-800 text-stone-300 border border-stone-800 text-xs flex items-center gap-1 cursor-pointer"
+                title="Choose from CMS Library"
               >
                 <FolderOpen className="w-3.5 h-3.5 text-ginosko-gold" />
-                Select From Library
+                Library
+              </button>
+            </div>
+          </div>
+        ) : (
+          <div className="flex flex-col items-start gap-2">
+            <div className="w-28 h-28 rounded-xl bg-slate-900/80 border-2 border-dashed border-slate-700/80 flex flex-col items-center justify-center text-slate-500 gap-1 p-2 text-center">
+              <ImageIcon className="w-6 h-6 text-slate-400" />
+              <span className="text-[10px]">No image</span>
+            </div>
+
+            <div className="flex items-center gap-2">
+              <label className="px-3.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-white border border-slate-700 text-xs font-medium flex items-center gap-1.5 cursor-pointer transition-all shadow-sm">
+                <Upload className="w-3.5 h-3.5 text-amber-400" />
+                {isProcessing ? "Uploading..." : "Upload image"}
+                <input
+                  type="file"
+                  accept="image/*"
+                  disabled={isProcessing}
+                  onChange={handleFileChange}
+                  className="hidden"
+                />
+              </label>
+
+              <button
+                type="button"
+                onClick={() => setIsLibraryOpen(true)}
+                className="px-2.5 py-1.5 rounded-lg bg-stone-900 hover:bg-stone-800 text-stone-300 border border-stone-800 text-xs flex items-center gap-1 cursor-pointer"
+              >
+                <FolderOpen className="w-3.5 h-3.5 text-ginosko-gold" />
+                Library
               </button>
             </div>
           </div>
