@@ -215,13 +215,23 @@ export const CMSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     }
   }, []);
 
+  // Safe JSON parsing helper
+  const parseJSON = async (res: Response) => {
+    const contentType = res.headers.get("content-type");
+    if (contentType && contentType.includes("application/json")) {
+      return await res.json();
+    }
+    const text = await res.text();
+    throw new Error(`Server returned non-JSON response (${res.status}): ${text.slice(0, 100)}...`);
+  };
+
   // Fetch full CMS data on load
   const refreshCMS = async () => {
     try {
       setIsLoading(true);
       const res = await fetch("/api/cms/data");
       if (res.ok) {
-        const data = await res.json();
+        const data = await parseJSON(res);
         setCmsData(data);
       }
     } catch (err) {
@@ -243,7 +253,7 @@ export const CMSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password })
       });
-      const result = await res.json();
+      const result = await parseJSON(res);
       if (res.ok && result.user) {
         setUser(result.user);
         setToken(result.token);
@@ -254,7 +264,7 @@ export const CMSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
       }
       return { success: false, error: result.error || "Login failed" };
     } catch (err: any) {
-      return { success: false, error: err.message };
+      return { success: false, error: err.message || "Invalid credentials or server unavailable" };
     }
   };
 
@@ -322,7 +332,7 @@ export const CMSProvider: React.FC<{ children: React.ReactNode }> = ({ children 
           userName: user ? user.name : "Admin User"
         })
       });
-      const data = await res.json();
+      const data = await parseJSON(res);
       if (res.ok && data.item) {
         await refreshCMS();
         return data.item;

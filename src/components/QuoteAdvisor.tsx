@@ -64,7 +64,15 @@ export default function QuoteAdvisor({ isOpen, onClose }: QuoteAdvisorProps) {
         body: JSON.stringify(formData)
       });
       
-      const data = await res.json();
+      let data: any = {};
+      const contentType = res.headers.get("content-type");
+      if (contentType && contentType.includes("application/json")) {
+        data = await res.json();
+      } else {
+        const text = await res.text();
+        console.warn("Server returned non-JSON response in quote advisor:", text);
+        data = { error: "Server unavailable or non-JSON response" };
+      }
       
       // Delay response slightly to guarantee loading experience completes beautifully
       setTimeout(() => {
